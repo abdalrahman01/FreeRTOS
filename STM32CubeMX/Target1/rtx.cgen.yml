@@ -1,0 +1,72 @@
+generator-import:
+  for-device: STM32F407IGHx
+  define:
+    - USE_HAL_DRIVER
+    - STM32F407xx
+  add-path:
+    - ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Inc
+    - ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy
+    - ./STM32CubeMX/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+    - ./STM32CubeMX/Inc
+    - ./MX_Device
+    - ./STM32CubeMX/Src/TraceRecorder/config
+    - ./STM32CubeMX/Src/TraceRecorder/include
+    # - ./STM32CubeMX/Src/TraceRecorder/streamports/RingBuffer/include
+    # - ./STM32CubeMX/Src/TraceRecorder/streamports/RingBuffer/config
+    - ./STM32CubeMX/Src/TraceRecorder/streamports/ARM_ITM/include
+    - ./STM32CubeMX/Src/TraceRecorder/streamports/ARM_ITM/config
+  groups:
+    - group: CubeMX
+      files:
+        - file: ./STM32CubeMX/Src/main.c
+        - file: ./STM32CubeMX/Src/app_main.c
+        - file: ./STM32CubeMX/Src/stm32f4xx_it.c
+        - file: ./STM32CubeMX/Src/stm32f4xx_hal_msp.c
+        - file: ./STM32CubeMX/MDK-ARM/startup_stm32f407xx.s
+        - file: ./STM32CubeMX/Src/system_stm32f4xx.c
+    - group: TraceRecorder
+      files:
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcAssert.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcCounter.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcDependency.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcDiagnostics.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcEntryTable.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcError.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcEvent.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcEventBuffer.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcExtension.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcHardwarePort.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcHeap.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcISR.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcInternalEventBuffer.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcInterval.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcKernelPort.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcMultiCoreEventBuffer.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcObject.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcPrint.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcRunnable.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcSnapshotRecorder.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcStackMonitor.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcStateMachine.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcStaticBuffer.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcStreamingRecorder.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcString.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcTask.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/trcTimestamp.c
+        # - file: ./STM32CubeMX/Src/TraceRecorder/streamports/RingBuffer/trcStreamPort.c
+        - file: ./STM32CubeMX/Src/TraceRecorder/streamports/ARM_ITM/trcStreamPort.c
+    - group: STM32 HAL Driver
+      files:
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c
+        - file: ./STM32CubeMX/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c
