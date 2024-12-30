@@ -1,3 +1,7 @@
+# FreeRTOS on STM32F4 with STM32CubeMX, Keil uVision 5 and Tracealyzer frin Percepio
+
+The example project is a simple FreeRTOS project with multiple tasks, queues, and semaphores. 
+
 How I created the project: 
  - start MDK uVision 5 and create a new project
  - add Device::CubeMX and FreeRTOS
