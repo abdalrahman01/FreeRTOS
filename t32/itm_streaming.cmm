@@ -22,7 +22,7 @@ if "&file"==""
 ITM.ON
 PER.Set.simple ESD:0xE0000E00 %Long data.long(ESD:0xE0000E00)|(0x1<<&channel) ;Enable ITM channel
 PER.Set.simple ESD:0xE0000E40 %Long 0xf ; Set privileged mode for all cahnnels
-Trace.Mode pipe
-Trace.WRITE &file /ChannelID &channel /Payload
+Trace.Mode STREAM
+trace.STREAMFILE &file 
 
 enddo

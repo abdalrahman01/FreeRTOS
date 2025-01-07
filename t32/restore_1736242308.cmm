@@ -1,0 +1,29 @@
+; Created by FreeRTOS ramdump.cmm - $Id: ramdump.cm 10273 2024-07-12 07:46:59Z amerkle $
+; 7. Jan 2025 on Windows
+
+IF !SIMULATOR()
+(
+  PRINT %ERROR "Please execute this script in a TRACE32 Simulator!"
+  ENDDO
+)
+
+RESet
+SYStem.RESet
+SYStem.CPU STM32F407IG
+SYStem.Up
+
+; Restore memory contents
+Data.LOAD.Binary ~~~~/1736242308_mem_ad_0x8000000--0x800515f.bin.gz AD:0x8000000--0x800515f /UNZIP /NosYmbol
+Data.LOAD.Binary ~~~~/1736242308_mem_ad_0x20000000--0x200058b7.bin.gz AD:0x20000000--0x200058b7 /UNZIP /NosYmbol
+
+; Restore registers per logical core
+DO ~~~~/1736242308_reg_core0.cmm
+DO ~~~~/1736242308_ppb_core0_current.cmm
+DO ~~~~/1736242308_reg_core0.cmm
+
+Data.LOAD.Elf "C:\workplace\rtx3\out\rtx\Target1\rtx.axf"  /NoCODE
+
+TASK.CONFIG "~~/demo/arm/kernel/freertos/freertos.t32" 
+MENU.ReProgram "~~/demo/arm/kernel/freertos/freertos.men"
+
+ENDDO
