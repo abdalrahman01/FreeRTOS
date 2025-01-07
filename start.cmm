@@ -1,0 +1,27 @@
+; Basic setup
+  RESet
+  SYStem.RESet
+  SYStem.CPU STM32F407IG
+  SYStem.CONFIG.DEBUGPORTTYPE SWD
+  SYStem.MemAccess DAP
+  SYStem.Option DUALPORT ON
+  SYStem.Up
+
+
+  ; Setup flash configuration using the board support scripts of the TRACE32 installation
+  DO ~~/demo/arm/flash/stm32f4xx.cmm PREPAREONLY DUALPORT=1
+
+  ; Program the internal flash
+  FLASH.ReProgram.ALL /Erase
+  Data.LOAD.Elf ~~~~/../out/rtx/Target1/rtx.axf
+  FLASH.ReProgram.off
+
+  ; Reset device
+  SYStem.Down
+  SYStem.Up
+
+  ; load FreeRTOS kernel awareness
+  TASK.CONFIG ~~/demo/arm/kernel/freertos/freertos.t32
+  MENU.ReProgram ~~/demo/arm/kernel/freertos/freertos.men
+
+  ENDDO
