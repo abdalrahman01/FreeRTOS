@@ -1,0 +1,8 @@
+;/************************************************************
+;* Percepio Tracealyzer - ITM Trace Exporter for Lauterbach TRACE32
+;* Copyright (c) 2021, Percepio AB.
+;* https://percepio.com
+;************************************************************/
+
+menu.reprogram percepio.men
+enddo

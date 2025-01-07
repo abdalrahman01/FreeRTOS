@@ -1,0 +1,28 @@
+;/************************************************************
+;* Percepio Tracealyzer - ITM Trace Exporter for Lauterbach TRACE32
+;* Copyright (c) 2021, Percepio AB.
+;* https://percepio.com
+;************************************************************/
+
+;Execute script without paramters will use default
+;Call with parameters if customisation is needed
+;do itm_streaming.cmm <trace file> <ITM channel>
+;eg
+;do itm_streaming.cmm mytrace.psf 5.
+
+
+LOCAL  &file &channel
+ENTRY &file &channel
+
+if "&channel"==""
+  &channel=1
+if "&file"==""
+  &file="tracealyzer.psf"
+
+ITM.ON
+PER.Set.simple ESD:0xE0000E00 %Long data.long(ESD:0xE0000E00)|(0x1<<&channel) ;Enable ITM channel
+PER.Set.simple ESD:0xE0000E40 %Long 0xf ; Set privileged mode for all cahnnels
+Trace.Mode pipe
+Trace.WRITE &file /ChannelID &channel /Payload
+
+enddo
