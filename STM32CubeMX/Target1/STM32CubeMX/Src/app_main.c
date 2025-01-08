@@ -39,9 +39,12 @@ static void prvSetupHardware( void );
  * this file.
  */
 static void prvQueueReceiveTask( void *pvParameters );
-static void prvQueueSendTask( void *pvParameters );
-static void prvQueueReceiveTask2( void *pvParameters );
+static void prvQueueSendTask1( void *pvParameters );
 static void prvQueueSendTask2( void *pvParameters );
+static void prvQueueSendTask3( void *pvParameters );
+static void prvQueueSendTask4( void *pvParameters );
+static void prvQueueSendTask5( void *pvParameters );
+static void prvQueueSendTask6( void *pvParameters );
 
 /*
  * The callback function assigned to the example software timer as described at
@@ -70,6 +73,7 @@ static SemaphoreHandle_t xEventSemaphore = NULL;
 static volatile uint32_t ulCountOfTimerCallbackExecutions = 0;
 static volatile uint32_t ulCountOfItemsReceivedOnQueue = 0;
 static volatile uint32_t ulCountOfReceivedSemaphores = 0;
+static volatile uint32_t ulCountInQueue = 0;
 
 /*-----------------------------------------------------------*/
 
@@ -111,40 +115,48 @@ TimerHandle_t xExampleSoftwareTimer = NULL;
                  /* Used to obtain a handle to the created task. Not used in
                     this simple demo, so set to NULL. */
                  NULL );
-    xTaskCreate( /* The function that implements the task. */
-                 prvQueueReceiveTask2,
-                 /* Text name for the task, just to help debugging. */
-                 "Rx",
-                 /* The size (in words) of the stack that should be created
-                    for the task. */
-                 configMINIMAL_STACK_SIZE,
-                 /* A parameter that can be passed into the task. Not used
-                    in this simple demo. */
-                 NULL,
-                 /* The priority to assign to the task. tskIDLE_PRIORITY
-                    (which is 0) is the lowest priority. configMAX_PRIORITIES - 1
-                    is the highest priority. */
-                 mainQUEUE_RECEIVE_TASK_PRIORITY,
-                 /* Used to obtain a handle to the created task. Not used in
-                    this simple demo, so set to NULL. */
-                 NULL );
+
 
     /* Create the queue send task in exactly the same way. Again, this is
        described in the comments at the top of the file. */
-    xTaskCreate( prvQueueSendTask,
-                 "TX",
+    xTaskCreate( prvQueueSendTask1,
+                  "K",
                   configMINIMAL_STACK_SIZE,
                   NULL,
-                  mainQUEUE_SEND_TASK_PRIORITY,
+                  mainQUEUE_SEND_TASK_PRIORITY +1,
                   NULL );
-    /* Create the queue send task in exactly the same way. Again, this is
-       described in the comments at the top of the file. */
     xTaskCreate( prvQueueSendTask2,
-                 "TX",
+                  "O",
                   configMINIMAL_STACK_SIZE,
                   NULL,
-                  mainQUEUE_SEND_TASK_PRIORITY,
+                  mainQUEUE_SEND_TASK_PRIORITY + 1,
                   NULL );
+    xTaskCreate( prvQueueSendTask3,
+                  "l",
+                  configMINIMAL_STACK_SIZE,
+                  NULL,
+                  mainQUEUE_SEND_TASK_PRIORITY + 2,
+                  NULL );
+   xTaskCreate( prvQueueSendTask4,
+               "L",
+               configMINIMAL_STACK_SIZE,
+               NULL,
+               mainQUEUE_SEND_TASK_PRIORITY + 3,
+               NULL );
+   xTaskCreate( prvQueueSendTask5,
+               "E",
+               configMINIMAL_STACK_SIZE,
+               NULL,
+               mainQUEUE_SEND_TASK_PRIORITY + 4,
+               NULL );  
+
+   xTaskCreate( prvQueueSendTask6,
+               "H",
+               configMINIMAL_STACK_SIZE,
+               NULL,
+               mainQUEUE_SEND_TASK_PRIORITY + 5,
+               NULL );
+
 
     /* Create the task that is synchronised with an interrupt using the
        xEventSemaphore semaphore. */
@@ -197,12 +209,11 @@ static void vExampleTimerCallback( TimerHandle_t xTimer )
        execute periodically. */
     ulCountOfTimerCallbackExecutions++;
 }
-/*-----------------------------------------------------------*/
 
-static void prvQueueSendTask( void *pvParameters )
+static void prvQueueSendTask1( void *pvParameters )
 {
 TickType_t xNextWakeTime;
-const uint32_t ulValueToSend = 100UL;
+const uint32_t ulValueToSend = 200UL;
 
     /* Initialise xNextWakeTime - this only needs to be done once. */
     xNextWakeTime = xTaskGetTickCount();
@@ -220,10 +231,9 @@ const uint32_t ulValueToSend = 100UL;
            operation will not block - it shouldn't need to block as the queue
            should always be empty at this point in the code. */
         xQueueSend( xQueue, &ulValueToSend, 100 );
+        ulCountInQueue++;
     }
 }
-/*-----------------------------------------------------------*/
-
 static void prvQueueSendTask2( void *pvParameters )
 {
 TickType_t xNextWakeTime;
@@ -245,6 +255,108 @@ const uint32_t ulValueToSend = 200UL;
            operation will not block - it shouldn't need to block as the queue
            should always be empty at this point in the code. */
         xQueueSend( xQueue, &ulValueToSend, 100 );
+        ulCountInQueue++;
+
+    }
+}
+static void prvQueueSendTask3( void *pvParameters )
+{
+TickType_t xNextWakeTime;
+const uint32_t ulValueToSend = 200UL;
+
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
+
+    for( ;; )
+    {
+        /* Place this task in the blocked state until it is time to run again.
+           The block time is specified in ticks, the constant used converts ticks
+           to ms. The task will not consume any CPU time while it is in the
+           Blocked state. */
+        vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_PERIOD_MS );
+
+        /* Send to the queue - causing the queue receive task to unblock and
+           increment its counter. 0 is used as the block time so the sending
+           operation will not block - it shouldn't need to block as the queue
+           should always be empty at this point in the code. */
+        xQueueSend( xQueue, &ulValueToSend, 100 );
+        ulCountInQueue++;
+
+    }
+}
+static void prvQueueSendTask4( void *pvParameters )
+{
+TickType_t xNextWakeTime;
+const uint32_t ulValueToSend = 200UL;
+
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
+
+    for( ;; )
+    {
+        /* Place this task in the blocked state until it is time to run again.
+           The block time is specified in ticks, the constant used converts ticks
+           to ms. The task will not consume any CPU time while it is in the
+           Blocked state. */
+        vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_PERIOD_MS );
+
+        /* Send to the queue - causing the queue receive task to unblock and
+           increment its counter. 0 is used as the block time so the sending
+           operation will not block - it shouldn't need to block as the queue
+           should always be empty at this point in the code. */
+        xQueueSend( xQueue, &ulValueToSend, 100 );
+        ulCountInQueue++;
+
+    }
+}
+static void prvQueueSendTask5( void *pvParameters )
+{
+TickType_t xNextWakeTime;
+const uint32_t ulValueToSend = 200UL;
+
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
+
+    for( ;; )
+    {
+        /* Place this task in the blocked state until it is time to run again.
+           The block time is specified in ticks, the constant used converts ticks
+           to ms. The task will not consume any CPU time while it is in the
+           Blocked state. */
+        vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_PERIOD_MS );
+
+        /* Send to the queue - causing the queue receive task to unblock and
+           increment its counter. 0 is used as the block time so the sending
+           operation will not block - it shouldn't need to block as the queue
+           should always be empty at this point in the code. */
+        xQueueSend( xQueue, &ulValueToSend, 100 );
+        ulCountInQueue++;
+
+    }
+}
+static void prvQueueSendTask6( void *pvParameters )
+{
+TickType_t xNextWakeTime;
+const uint32_t ulValueToSend = 200UL;
+
+    /* Initialise xNextWakeTime - this only needs to be done once. */
+    xNextWakeTime = xTaskGetTickCount();
+
+    for( ;; )
+    {
+        /* Place this task in the blocked state until it is time to run again.
+           The block time is specified in ticks, the constant used converts ticks
+           to ms. The task will not consume any CPU time while it is in the
+           Blocked state. */
+        vTaskDelayUntil( &xNextWakeTime, mainQUEUE_SEND_PERIOD_MS );
+
+        /* Send to the queue - causing the queue receive task to unblock and
+           increment its counter. 0 is used as the block time so the sending
+           operation will not block - it shouldn't need to block as the queue
+           should always be empty at this point in the code. */
+        xQueueSend( xQueue, &ulValueToSend, 100 );
+        ulCountInQueue++;
+
     }
 }
 /*-----------------------------------------------------------*/
@@ -258,15 +370,20 @@ uint32_t ulReceivedValue;
         /* Wait until something arrives in the queue - this task will block
            indefinitely provided INCLUDE_vTaskSuspend is set to 1 in
            FreeRTOSConfig.h. */
-        xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
 
-        /* To get here something must have been received from the queue, but
-           is it the expected value? If it is, increment the counter. */
-        if( ulReceivedValue == 100UL )
-        {
-            /* Count the number of items that have been received correctly. */
-            ulCountOfItemsReceivedOnQueue++;
-        }
+         
+
+         for (int i = ulCountInQueue; i > 0; i--) {
+
+            xQueueReceive( xQueue, &ulReceivedValue, portMAX_DELAY );
+
+            if( ulReceivedValue == 200UL )
+            {
+                /* Count the number of items that have been received correctly. */
+                ulCountOfItemsReceivedOnQueue++;
+            }
+         }
+
     }
 }
 
